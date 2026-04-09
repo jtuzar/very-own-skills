@@ -34,6 +34,7 @@ If the approved item includes `create:Epic Name`, create the epic first:
 Then create the story with mcp__shortcut__stories-create:
 - `name`: task description (concise, actionable)
 - `team`: `ffall`
+- `workflow`: `500000005` (Product Development — ALWAYS set this explicitly)
 - `type`: the user-confirmed type (feature/bug/chore)
 - `epic`: the user-selected epic ID (omit if "none")
 - Do NOT set `owner` — stories are assigned during sprint planning
