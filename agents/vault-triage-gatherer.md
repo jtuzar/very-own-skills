@@ -36,8 +36,8 @@ Use these results to suggest appending to existing notes rather than creating ne
 **Step 4 — Classify content from each section:**
 
 The note has two sections that determine scope:
-- `## 💼 Work` — everything here is work-scoped
-- `## 🌿 Personal` — everything here is personal-scoped
+- `## 🔥🐟️ Work` — everything here is work-scoped
+- `## ⚔️ Personal` — everything here is personal-scoped
 
 Classify items into these types:
 - Task: actionable item (- [ ] checkbox is always a task, - [x] is completed — note it and skip)

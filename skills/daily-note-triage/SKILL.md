@@ -54,8 +54,8 @@ triaged: false
 
 | Section | Content type |
 |---------|-------------|
-| `## 💼 Work` | Work tasks, meeting notes, ideas, links. Items here are implicitly work-scoped. |
-| `## 🌿 Personal` | Personal tasks, thoughts, links, errands. Items here are implicitly personal-scoped. |
+| `## 🔥🐟️ Work` | Work tasks, meeting notes, ideas, links. Items here are implicitly work-scoped. |
+| `## ⚔️ Personal` | Personal tasks, thoughts, links, errands. Items here are implicitly personal-scoped. |
 
 ## Workflow
 
@@ -97,17 +97,23 @@ Which items to approve? (e.g., "all", "1,3", "skip 2", "edit 4")
 
 Wait for the user's response before proceeding.
 
-#### Shortcut context gathering
+#### Shortcut context gathering (MANDATORY)
 
-After the user approves items, use `AskUserQuestion` for each approved Shortcut-bound task. Ask both questions in a single call:
+**You MUST use the `AskUserQuestion` tool for each approved Shortcut-bound task.** Do NOT present Shortcut options as text in the conversation. The `AskUserQuestion` tool provides a structured UI that is much easier to interact with.
+
+For each Shortcut task, call `AskUserQuestion` with **two questions in a single call**:
 
 **Question 1 — Story type** (header: "Type"):
-- Options built from the gatherer's `SUGGESTED_TYPE` recommendation. Put the recommended type first with "(Recommended)" suffix. Always include all three: feature, bug, chore.
+- Build options from the gatherer's `SUGGESTED_TYPE`. Put the recommended type first with "(Recommended)" suffix. Always include all three: feature, bug, chore.
+- `multiSelect: false`
 
 **Question 2 — Epic** (header: "Epic"):
-- Build options from the gatherer's `EPIC_SUGGESTIONS` (3 best matches), plus a "None (no epic)" option. The user can pick "Other" (auto-provided) to type a new epic name or request the full list.
+- Build options from the gatherer's `EPIC_SUGGESTIONS` (3 best matches), plus a "None (no epic)" option. The auto-provided "Other" option lets the user type a new epic name or request the full list.
+- `multiSelect: false`
 
 If the user picks "Other" for the epic and provides a new name, that signals epic creation — pass `create:Epic Name` to the executor.
+
+If multiple Shortcut tasks share the same likely epic (e.g., 3 tasks all related to the same domain), you MAY batch them into one `AskUserQuestion` call by asking about the epic once and listing the tasks in the question text. Still ask about type per task if they differ.
 
 ### Phase 3: Execute approved actions (subagent)
 
