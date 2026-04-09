@@ -69,61 +69,52 @@ Dispatch a subagent with the Agent tool using `subagent_type: "very-own-skills:v
 Today's date is YYYY-MM-DD. Find and classify all un-triaged daily notes.
 ```
 
-### Phase 2: Present and get user approval (main agent)
+### Phase 2: Triage items one by one (main agent)
 
-Parse the subagent's report and present ONE note at a time:
+Parse the subagent's report. Process ONE note at a time. For each note:
+
+**Step 1 — Print a summary header** (text only, no questions):
 
 ```
-📅 Daily note: YYYY-MM-DD (Note N of M)
-
-📋 Tasks:
-  1. "Prepare points for tech debt talk" → Todoist (work)
-  2. "Add rate limiting to disbursement API" → Shortcut (details next)
-  3. "Book dentist appointment" → Todoist (personal)
-
-💡 Knowledge:
-  4. "Insight title" → create new / append to "Existing Note" (tags)
-
-📐 Plans:
-  5. "Decision or direction" → create new / append to "Existing Plan" (tags)
-
-🔗 References:
-  6. URL or resource → Reading List
-
----
-✅ Approve  ⏭️ Skip  ✏️ Edit
-Which items to approve? (e.g., "all", "1,3", "skip 2", "edit 4")
+📅 Daily note: YYYY-MM-DD (Note N of M) — X items found
 ```
 
-Wait for the user's response before proceeding.
+**Step 2 — Loop through each item using `AskUserQuestion`.**
 
-#### Shortcut context gathering (MANDATORY)
+**CRITICAL: You MUST use `AskUserQuestion` for EVERY item. Do NOT present items as text and ask for approval in conversation. The `AskUserQuestion` tool is the ONLY way to interact with the user during triage.**
 
-**You MUST use the `AskUserQuestion` tool for each approved Shortcut-bound task.** Do NOT present Shortcut options as text in the conversation. The `AskUserQuestion` tool provides a structured UI that is much easier to interact with.
+#### Non-Shortcut items (Todoist tasks, Knowledge, Plans, References)
 
-For each Shortcut task, call `AskUserQuestion` with **two questions in a single call**:
+Call `AskUserQuestion` with **1 question**:
 
-**Question 1 — Story type** (header: "Type"):
-- Build options from the gatherer's `SUGGESTED_TYPE`. Put the recommended type first with "(Recommended)" suffix. Always include all three: feature, bug, chore.
-- `multiSelect: false`
+- question: `📋 "Task description" → Todoist (work)` (include the emoji, description, and proposed destination)
+- header: `"Action"`
+- options: `Approve (Recommended)`, `Skip`
+- multiSelect: `false`
 
-**Question 2 — Epic** (header: "Epic"):
-- Build options from the gatherer's `EPIC_SUGGESTIONS` (3 best matches), plus a "None (no epic)" option. The auto-provided "Other" option lets the user type a new epic name or request the full list.
-- `multiSelect: false`
+The auto-provided "Other" option lets the user reroute or edit the item.
 
-If the user picks "Other" for the epic and provides a new name, that signals epic creation — pass `create:Epic Name` to the executor.
+#### Shortcut items
 
-If multiple Shortcut tasks share the same likely epic (e.g., 3 tasks all related to the same domain), you MAY batch them into one `AskUserQuestion` call by asking about the epic once and listing the tasks in the question text. Still ask about type per task if they differ.
+Call `AskUserQuestion` with **3 questions in a single call**:
+
+- **Q1** (header `"Action"`): options `Approve (Recommended)`, `Skip`
+- **Q2** (header `"Type"`): recommended type first with "(Recommended)" suffix, plus the other two types. Always include all three: feature, bug, chore. multiSelect: false
+- **Q3** (header `"Epic"`): 3 epic suggestions from the gatherer's `EPIC_SUGGESTIONS` + `None (no epic)`. The auto-provided "Other" option lets the user type a new epic name or request the full list. multiSelect: false
+
+If user picks "Skip" for Q1, ignore Q2/Q3 answers.
+If user picks "Other" for the epic and provides a new name → pass `create:Epic Name` to the executor.
+
+**Step 3 — After all items from a note are resolved**, collect the approved items and proceed to Phase 3.
 
 ### Phase 3: Execute approved actions (subagent)
 
-After collecting approvals for a note, dispatch a subagent with `subagent_type: "very-own-skills:vault-triage-executor"` and a prompt containing the daily note path and the approved items:
+Dispatch a subagent with `subagent_type: "very-own-skills:vault-triage-executor"` and a prompt containing the daily note path and all approved items with their full context:
 
 ```
 DAILY NOTE: Dailies/YYYY-MM-DD.md
 APPROVED ITEMS:
-[paste the approved items here with their destinations and tags]
-For Shortcut items, include: type (feature/bug/chore), epic ID (or "none" or "create:Epic Name")
+[paste each approved item with its destination, tags, and for Shortcut items: type (feature/bug/chore), epic ID (or "none" or "create:Epic Name")]
 ```
 
 ### Phase 4: Report (main agent)
