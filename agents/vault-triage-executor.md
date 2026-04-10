@@ -87,6 +87,8 @@ Verify each task was created by checking the CLI output for a success message. I
 **After all items are filed, mark the daily note as triaged:**
 `obsidian property:set name="triaged" value="true" type="checkbox" path="Dailies/YYYY-MM-DD.md"`
 
+**CRITICAL: Never delete, overwrite, or modify the content of a daily note. Daily notes are permanent records. The only change allowed is setting the `triaged` property to `true`.**
+
 ## Report format
 
 Return a report in this exact format:
