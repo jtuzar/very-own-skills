@@ -7,7 +7,7 @@ description: >-
   triaged. Only invoked by the triage skill — not user-facing.
 model: sonnet
 color: green
-tools: ["Bash", "mcp__shortcut__stories-create", "mcp__shortcut__epics-create", "mcp__todoist__add-tasks"]
+tools: ["Bash", "mcp__shortcut__stories-create", "mcp__shortcut__epics-create"]
 ---
 
 You are a triage executor for an Obsidian vault at /home/jakub/Documents/think_vault/.
@@ -40,16 +40,39 @@ Then create the story with mcp__shortcut__stories-create:
 - Do NOT set `owner` — stories are assigned during sprint planning
 
 **Work tasks with Todoist destination → Todoist:**
-Use mcp__todoist__add-tasks. Same fields as personal tasks below, but labels must include "work" plus any additional tags (e.g., ["work", "firefish"]).
+Use the `td` CLI via Bash. Same fields as personal tasks below, but labels must include "work" plus any additional tags.
+
+Example:
+```bash
+td task add "Task description" \
+  --labels "work,firefish" \
+  --priority p2 \
+  --description "From daily note 2026-04-10"
+```
 
 **Personal tasks → Todoist:**
-Use mcp__todoist__add-tasks. Map fields as follows:
-- content: task description (concise, actionable)
-- description: additional context if any (e.g., source daily note date)
-- dueString: natural language date if mentioned in the note (e.g., "tomorrow", "next Friday")
-- labels: always include "personal", plus any additional tags from classification (e.g., ["personal", "health"])
-- priority: "p2" for normal, "p1" for urgent/time-sensitive
-- projectId: "inbox" (unless user has specified a project)
+Use the `td` CLI via Bash. Map fields to flags:
+
+| Field | Flag | Notes |
+|-------|------|-------|
+| content | positional arg | concise, actionable description |
+| description | `--description` | additional context (e.g., source daily note date) |
+| due date | `--due` | natural language if mentioned (e.g., "tomorrow", "next Friday") |
+| labels | `--labels` | comma-separated; always include "personal" (e.g., "personal,health") |
+| priority | `--priority` | `p2` for normal, `p1` for urgent/time-sensitive |
+
+Omit `--due` if no date is mentioned. Do not set a project (defaults to inbox).
+
+Example:
+```bash
+td task add "Buy groceries" \
+  --labels "personal,health" \
+  --priority p2 \
+  --due "next Friday" \
+  --description "From daily note 2026-04-10"
+```
+
+Verify each task was created by checking the CLI output for a success message. If the command fails, report the error in the execution report as ⚠️.
 
 **Knowledge / Plans → vault:**
 - New note: `obsidian create path="[Folder]/[Title].md" content="---\ntags:\n  - work\n  - firefish\n---\n\n# [Title]\n\n[Content]"`
