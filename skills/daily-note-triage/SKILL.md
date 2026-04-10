@@ -141,4 +141,4 @@ Then proceed to the next note, or if all done:
 - **Use YAML `tags:` arrays** when creating Knowledge/Plan notes.
 - **Prefer appending over creating.** Always search before proposing a new Knowledge or Plan note.
 - **Meeting notes are multi-type.** Extract tasks + knowledge separately, keep full meeting as knowledge item.
-- **Subagents are defined agents** (`vault-triage-gatherer`, `vault-triage-executor`) with tools restricted to Bash + MCP. This prevents them from using Grep/Read instead of the obsidian CLI.
+- **Subagents are defined agents** (`vault-triage-gatherer`, `vault-triage-executor`) with tools restricted to Bash + Shortcut MCP. This prevents them from using Grep/Read instead of the obsidian CLI. Todoist tasks are created via the `td` CLI (run through Bash).
