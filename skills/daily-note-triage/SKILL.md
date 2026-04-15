@@ -134,6 +134,14 @@ Then proceed to the next note, or if all done:
 
 > 🎉 All daily notes triaged!
 
+### Phase 4b: Surface MCP gaps
+
+After presenting the triage summary, check both subagent reports for a `GAPS` section. If either report contains gaps, append to the summary:
+
+> 🔧 MCP gap detected:
+> - [agent name] needed [capability] but no tool was available
+> - Consider adding [tool_name] to triage-tools MCP server
+
 ## Gotchas
 
 - **`obsidian frontmatter` command does NOT exist.** Use `property:read`, `property:set`, and `property:remove` for frontmatter changes.
@@ -141,4 +149,4 @@ Then proceed to the next note, or if all done:
 - **Use YAML `tags:` arrays** when creating Knowledge/Plan notes.
 - **Prefer appending over creating.** Always search before proposing a new Knowledge or Plan note.
 - **Meeting notes are multi-type.** Extract tasks + knowledge separately, keep full meeting as knowledge item.
-- **Subagents are defined agents** (`vault-triage-gatherer`, `vault-triage-executor`) with tools restricted to Bash + Shortcut MCP. This prevents them from using Grep/Read instead of the obsidian CLI. Todoist tasks are created via the `td` CLI (run through Bash).
+- **Subagents use typed MCP tools** (`vault-triage-gatherer`, `vault-triage-executor`) with tools restricted to `triage_tools` MCP + Shortcut MCP. No Bash access — all vault and Todoist operations go through the triage-tools MCP server. If a subagent reports GAPS, consider adding the missing tool to the MCP server.
