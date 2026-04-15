@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "triage_tools": {
+      "command": "deno",
+      "args": ["run", "--allow-run", "mcp/triage-tools/server.ts"]
+    }
+  }
+}
