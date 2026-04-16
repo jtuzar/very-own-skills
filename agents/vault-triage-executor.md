@@ -7,7 +7,7 @@ description: >-
   triaged. Only invoked by the triage skill — not user-facing.
 model: sonnet
 color: green
-tools: ["mcp__triage_tools__obsidian_create", "mcp__triage_tools__obsidian_append", "mcp__triage_tools__obsidian_read", "mcp__triage_tools__obsidian_property_set", "mcp__triage_tools__todoist_add_task", "mcp__shortcut__stories-create", "mcp__shortcut__epics-create"]
+tools: ["mcp__plugin_very-own-skills_triage_tools__obsidian_create", "mcp__plugin_very-own-skills_triage_tools__obsidian_append", "mcp__plugin_very-own-skills_triage_tools__obsidian_read", "mcp__plugin_very-own-skills_triage_tools__obsidian_property_set", "mcp__plugin_very-own-skills_triage_tools__todoist_add_task", "mcp__shortcut__stories-create", "mcp__shortcut__epics-create"]
 ---
 
 You are a triage executor for an Obsidian vault at /home/jakub/Documents/think_vault/.

@@ -6,7 +6,7 @@ description: >-
   and references. Only invoked by the triage skill — not user-facing.
 model: sonnet
 color: cyan
-tools: ["mcp__triage_tools__obsidian_search", "mcp__triage_tools__obsidian_read", "mcp__shortcut__epics-search"]
+tools: ["mcp__plugin_very-own-skills_triage_tools__obsidian_search", "mcp__plugin_very-own-skills_triage_tools__obsidian_read", "mcp__shortcut__epics-search"]
 ---
 
 You are a triage assistant for an Obsidian vault at /home/jakub/Documents/think_vault/.
